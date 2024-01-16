@@ -7,6 +7,7 @@ import Control.Monad
 import qualified Data.ByteString.Lazy as BL
 import Data.Csv
 import Data.List
+import qualified Data.Vector as V
 import qualified Data.Text as T
 import Text.HTML.Scalpel
 import GHC.Generics (Generic)
@@ -39,7 +40,7 @@ data City = City
   }
   deriving (Show, Generic)
 
-instance ToRecord City
+instance ToNamedRecord City
 
 allCities :: IO (Maybe ([City]))
 allCities = scrapeURL "https://en.wikipedia.org/wiki/List_of_largest_cities" table
@@ -49,7 +50,6 @@ allCities = scrapeURL "https://en.wikipedia.org/wiki/List_of_largest_cities" tab
     table = chroot ("table" @: [hasClass "static-row-numbers"]) cities
 
     cities :: Scraper T.Text [City]
-    -- cities = chroots ("tr" @: [notP (hasClass "static-row-header")]) city
     cities =
       chroots ("tr" @: [notP (hasClass "static-row-header")]) $ do
       contents <- html "th"
@@ -72,7 +72,7 @@ allCities = scrapeURL "https://en.wikipedia.org/wiki/List_of_largest_cities" tab
 
 writeToFile :: [City] -> IO ()
 writeToFile cities = do
-  BL.writeFile "cities.csv" $  encode cities
+  BL.writeFile "cities.csv" $  encodeByName (V.fromList ["name", "country", "population"]) cities
 
 main :: IO ()
 main = do
