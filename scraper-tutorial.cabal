@@ -65,7 +65,11 @@ library
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    base ^>=4.17.2.0
+    build-depends:      base ^>=4.17.2.0,
+                        text,
+                        scalpel,
+                        cassava,
+                        bytestring
 
     -- Directories containing source files.
     hs-source-dirs:   src
@@ -91,7 +95,9 @@ executable scraper-tutorial
         base ^>=4.17.2.0,
         scraper-tutorial,
         text,
-        scalpel
+        scalpel,
+        cassava,
+        bytestring
 
     -- Directories containing source files.
     hs-source-dirs:   app
