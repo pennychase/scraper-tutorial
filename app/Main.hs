@@ -41,7 +41,12 @@ data City = City
   }
   deriving (Show, Generic)
 
--- instance ToNamedRecord City
+-- To create CSV file
+-- Using deriving with generics doesn't allow you to use capitals in the header, 
+-- so replaced generic deriving with manual
+
+-- instance ToNamedRecord City 
+
 instance ToNamedRecord City where
   toNamedRecord City{..} =
     namedRecord
