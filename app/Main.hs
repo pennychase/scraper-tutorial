@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE RecordWildCards #-}
 
 module Main where
 
@@ -40,7 +41,15 @@ data City = City
   }
   deriving (Show, Generic)
 
-instance ToNamedRecord City
+-- instance ToNamedRecord City
+instance ToNamedRecord City where
+  toNamedRecord City{..} =
+    namedRecord
+      [ "Name" .= name
+      , "Country" .= country
+      , "Population" .= population
+      ]
+
 
 allCities :: IO (Maybe ([City]))
 allCities = scrapeURL "https://en.wikipedia.org/wiki/List_of_largest_cities" table
@@ -72,7 +81,7 @@ allCities = scrapeURL "https://en.wikipedia.org/wiki/List_of_largest_cities" tab
 
 writeToFile :: [City] -> IO ()
 writeToFile cities = do
-  BL.writeFile "cities.csv" $  encodeByName (V.fromList ["name", "country", "population"]) cities
+  BL.writeFile "cities.csv" $  encodeByName (V.fromList ["Name", "Country", "Population"]) cities
 
 main :: IO ()
 main = do
